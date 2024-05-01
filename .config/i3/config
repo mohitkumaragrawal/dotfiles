@@ -225,6 +225,8 @@ gaps outer 0px
 # Auto start programs
 exec_always picom
 exec_always feh --bg-fill $HOME/.config/kitty/images/akane.png
+# exec_always feh --bg-fill ~/Pictures/mountains-7427622_1920.jpg
+
 
 exec --no-startup-id nm-applet --sm-disable
 
@@ -240,15 +242,13 @@ client.background           #2f343f
 
 bindsym $super+e exec rofi -show emoji
 bindsym $super+c exec rofi -show calc
-bindsym $super+b exec firefox
+bindsym $super+Return exec firefox
 
 ## Screenshots
 bindsym Print exec --no-startup-id maim "/home/$USER/Pictures/Screenshots/$(date).png"
-bindsym $mod+Print exec --no-startup-id maim --window $(xdotool getactivewindow) "/home/$USER/Pictures/Screenshots/$(date).png"
 bindsym Shift+Print exec --no-startup-id maim --select "/home/$USER/Pictures/Screenshots/$(date).png"
 
 ## Clipboard Screenshots
 bindsym Ctrl+Print exec --no-startup-id maim | xclip -selection clipboard -t image/png
-bindsym Ctrl+$mod+Print exec --no-startup-id maim --window $(xdotool getactivewindow) | xclip -selection clipboard -t image/png
-bindsym Ctrl+Shift+Print exec --no-startup-id maim --select | xclip -selection
+bindsym Ctrl+Shift+Print exec --no-startup-id maim --select | xclip -selection clipboard -t image/png
 
