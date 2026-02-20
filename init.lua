@@ -4,6 +4,7 @@ require("keymaps")
 require("integrations.neovide")
 
 require("autocmds.terminal_mode_persistance")
+require("agent_context").setup()
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
