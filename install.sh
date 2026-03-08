@@ -36,6 +36,17 @@ run() {
   "$@"
 }
 
+action() {
+  local message="$1"
+
+  if (( dry_run )); then
+    log "[dry-run] $message"
+    return
+  fi
+
+  log "$message"
+}
+
 backup_target() {
   local target="$1"
   local relative="${target#$HOME/}"
@@ -43,7 +54,7 @@ backup_target() {
 
   run mkdir -p "$(dirname "$destination")"
   run mv "$target" "$destination"
-  log "backed up $target -> $destination"
+  action "backed up $target -> $destination"
 }
 
 link_path() {
@@ -72,7 +83,7 @@ link_path() {
   fi
 
   run ln -s "$source" "$target"
-  log "linked $target -> $source"
+  action "linked $target -> $source"
 }
 
 main() {
