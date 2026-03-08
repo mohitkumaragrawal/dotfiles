@@ -8,6 +8,7 @@ Personal dotfiles for:
 - btop
 - Ghostty
 - Yazi
+- Zathura
 - Neovim
 
 ## Install
