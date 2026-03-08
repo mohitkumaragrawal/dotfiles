@@ -88,6 +88,29 @@ link_path() {
   action "linked $target -> $source"
 }
 
+install_yazi_packages() {
+  if [[ ! -f "$HOME/.config/yazi/package.toml" ]]; then
+    return
+  fi
+
+  if ! command -v ya >/dev/null 2>&1; then
+    log "warning: skipping Yazi packages because 'ya' is not installed"
+    return
+  fi
+
+  if (( dry_run )); then
+    action "would run 'ya pkg install' for Yazi packages"
+    return
+  fi
+
+  if ya pkg install; then
+    log "installed Yazi packages"
+    return
+  fi
+
+  printf "warning: failed to install Yazi packages; run 'ya pkg install' later\n" >&2
+}
+
 main() {
   while (($#)); do
     case "$1" in
@@ -110,6 +133,8 @@ main() {
   for relative in "${managed_paths[@]}"; do
     link_path "$relative"
   done
+
+  install_yazi_packages
 }
 
 main "$@"

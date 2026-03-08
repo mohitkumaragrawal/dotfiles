@@ -19,6 +19,9 @@ Run:
 ./install.sh
 ```
 
+If `ya` is installed, the script also runs `ya pkg install` so Yazi flavors and
+plugins are bootstrapped after the symlink is created.
+
 For a preview without changing anything:
 
 ```bash
@@ -30,4 +33,3 @@ The installer creates symlinks into `$HOME` and moves conflicting files into:
 ```text
 ~/.local/state/dotfiles-backups/<timestamp>/
 ```
-
