@@ -58,7 +58,7 @@ return {
 					vim.api.nvim_set_hl(0, "IblWhitespace", { fg = dark_indent })
 				end,
 			})
-			vim.cmd.colorscheme("kanagawa-dragon")
+			vim.cmd.colorscheme("kanagawa")
 		end,
 	},
 	{
