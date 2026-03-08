@@ -1,0 +1,1 @@
+return { "HiPhish/info.vim" }
