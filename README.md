@@ -3,7 +3,9 @@
 Personal dotfiles for:
 
 - tmux
+- Vim
 - WezTerm
+- btop
 - Ghostty
 - Yazi
 - Neovim

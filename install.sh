@@ -8,7 +8,9 @@ dry_run=0
 
 managed_paths=(
   ".tmux.conf"
+  ".vimrc"
   ".wezterm.lua"
+  ".config/btop"
   ".config/ghostty"
   ".config/nvim"
   ".config/yazi"
