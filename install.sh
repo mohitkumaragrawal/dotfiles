@@ -29,7 +29,6 @@ log() {
 
 run() {
   if (( dry_run )); then
-    printf '[dry-run] %s\n' "$*"
     return
   fi
 
