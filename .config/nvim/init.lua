@@ -23,6 +23,7 @@ vim.diagnostic.config({
 	virtual_text = true,
 })
 require("lazy").setup("plugins")
+require("search_profiles").bootstrap()
 
 vim.filetype.add({
 	extension = {
