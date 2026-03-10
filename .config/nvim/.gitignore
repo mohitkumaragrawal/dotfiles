@@ -1,2 +1,3 @@
 lazy-lock.json
 lua/local/*.lua
+!lua/local/search_profiles.lua
