@@ -209,6 +209,15 @@ local function resolved_grep_opts(root, profile)
 	return opts
 end
 
+local function open_profile_picker(root, profile, picker_kind)
+	local opts = resolved_grep_opts(root, profile)
+	if picker_kind == "files" then
+		Snacks.picker.files(opts)
+		return
+	end
+	Snacks.picker.grep(opts)
+end
+
 function M.bootstrap()
 	if state.status == "loading" or state.status == "ready" then
 		return
@@ -299,11 +308,33 @@ function M.open_picker()
 		format_item = function(item)
 			return ("%s  [%s]"):format(item.label, item.scope)
 		end,
+		snacks = {
+			actions = {
+				open_files = function(picker, item)
+					item = item or picker:current()
+					item = item and (item.item or item)
+					if not item then
+						return
+					end
+					picker:close()
+					vim.schedule(function()
+						open_profile_picker(root, item, "files")
+					end)
+				end,
+			},
+				win = {
+					input = {
+						keys = {
+							["<c-f>"] = { "open_files", mode = { "n", "i" }, desc = "Find Files In Profile" },
+						},
+					},
+				},
+		},
 	}, function(item)
 		if not item then
 			return
 		end
-		Snacks.picker.grep(resolved_grep_opts(root, item))
+		open_profile_picker(root, item, "grep")
 	end)
 end
 
