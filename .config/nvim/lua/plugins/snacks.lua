@@ -9,7 +9,9 @@ return {
           file = false,
         }
       },
-			dashboard = {},
+			dashboard = {
+        enabled = false,
+      },
 		},
 		keys = {
 			-- Top Pickers
