@@ -1,11 +1,31 @@
 local M = vim.keymap.set
 
+local tmux_directions = {
+	h = "Left",
+	j = "Down",
+	k = "Up",
+	l = "Right",
+}
+
+local function tmux_navigate(key)
+	vim.cmd("TmuxNavigate" .. tmux_directions[key])
+end
+
+local function terminal_tmux_navigate(key)
+	vim.cmd("stopinsert")
+	tmux_navigate(key)
+end
+
 M("n", "<leader>|", "<cmd>vsplit<cr>", { desc = "Split window vertically" })
 M("n", "<leader>-", "<cmd>split<cr>", { desc = "Split window horizontally" })
-M({ "n", "v" }, "<C-h>", "<C-w>h", { desc = "Move to left window" })
-M({ "n", "v" }, "<C-j>", "<C-w>j", { desc = "Move to below window" })
-M({ "n", "v" }, "<C-k>", "<C-w>k", { desc = "Move to above window" })
-M({ "n", "v" }, "<C-l>", "<C-w>l", { desc = "Move to right window" })
+M("n", "<C-h>", function() tmux_navigate("h") end, { desc = "Move to left split" })
+M("n", "<C-j>", function() tmux_navigate("j") end, { desc = "Move to below split" })
+M("n", "<C-k>", function() tmux_navigate("k") end, { desc = "Move to above split" })
+M("n", "<C-l>", function() tmux_navigate("l") end, { desc = "Move to right split" })
+M("v", "<C-h>", "<C-w>h", { desc = "Move to left window" })
+M("v", "<C-j>", "<C-w>j", { desc = "Move to below window" })
+M("v", "<C-k>", "<C-w>k", { desc = "Move to above window" })
+M("v", "<C-l>", "<C-w>l", { desc = "Move to right window" })
 M("n", "<leader>wd", "<cmd>close<cr>", { desc = "Close window" })
 M("n", "<C-Up>", ":resize +2<CR>", { noremap = true, silent = true, desc = "Increase height" })
 M("n", "<C-Down>", ":resize -2<CR>", { noremap = true, silent = true, desc = "Decrease height" })
@@ -108,17 +128,13 @@ end, { desc = "Rename tab" })
 M("n", "[t", ":tabprevious<CR>", { desc = "Previous tab" })
 M("n", "]t", ":tabnext<CR>", { desc = "Next tab" })
 
-local function term_move(key)
-	vim.b.last_terminal_mode = "t"
-	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-\\><C-n><C-w>" .. key, true, true, true), "n", false)
-end
 -- escape from terminal mode
 M("t", "<C-Space>", "<C-\\><C-n>", { desc = "Escape terminal mode" })
 
-M("t", "<C-h>", function() term_move("h") end, { desc = "Move left" })
-M("t", "<C-j>", function() term_move("j") end, { desc = "Move down" })
-M("t", "<C-k>", function() term_move("k") end, { desc = "Move up" })
-M("t", "<C-l>", function() term_move("l") end, { desc = "Move right" })
+M("t", "<C-h>", function() terminal_tmux_navigate("h") end, { desc = "Move left" })
+M("t", "<C-j>", function() terminal_tmux_navigate("j") end, { desc = "Move down" })
+M("t", "<C-k>", function() terminal_tmux_navigate("k") end, { desc = "Move up" })
+M("t", "<C-l>", function() terminal_tmux_navigate("l") end, { desc = "Move right" })
 
 -- keymaps for creating terminals similar to tmux splits, using Ctrl-b as prefix
 M("n", "<C-Space>|", "<cmd>vsplit | terminal<cr>i", { desc = "Vertical terminal" })
