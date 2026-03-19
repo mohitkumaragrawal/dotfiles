@@ -8,6 +8,6 @@ return {
   opts = {
     show_icons = true,
     leader_key = 's', -- Recommended to be a single key
-    buffer_leader_key = 'm', -- Per Buffer Mappings
+    buffer_leader_key = '\\', -- Per Buffer Mappings
   }
 }
