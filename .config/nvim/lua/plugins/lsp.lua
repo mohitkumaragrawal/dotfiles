@@ -82,21 +82,21 @@ end
 return {
 	{
 		"williamboman/mason.nvim",
-		lazy = false,
+		cmd = { "Mason", "MasonInstall", "MasonUninstall", "MasonUpdate" },
 		config = function()
 			require("mason").setup()
 		end,
 	},
 	{
 		"williamboman/mason-lspconfig.nvim",
-		lazy = false,
+		event = { "BufReadPre", "BufNewFile" },
 		opts = {
 			auto_install = false,
 		},
 	},
 	{
 		"neovim/nvim-lspconfig",
-		lazy = false,
+		event = { "BufReadPre", "BufNewFile" },
 		config = function()
 			vim.api.nvim_create_autocmd("LspAttach", {
 				callback = function(args)

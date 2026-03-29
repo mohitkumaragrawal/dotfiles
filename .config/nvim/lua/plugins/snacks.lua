@@ -1,7 +1,6 @@
 return {
 	{
 		"folke/snacks.nvim",
-		lazy = false,
 		priority = 20000,
 		opts = {
 			picker = {

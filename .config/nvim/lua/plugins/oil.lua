@@ -10,8 +10,20 @@ local file_associations = {
 	mp3 = "mpv",
 }
 
+local function get_snacks()
+	local ok, snacks = pcall(require, "snacks")
+	if ok then
+		return snacks
+	end
+
+	require("lazy").load({ plugins = { "snacks.nvim" } })
+	return require("snacks")
+end
+
 return {
 	"stevearc/oil.nvim",
+	lazy = true,
+	cmd = { "Oil" },
 	---@module 'oil'
 	---@type oil.SetupOpts
 	opts = {
@@ -213,13 +225,14 @@ return {
 			-- -----------------------
 			["<leader>fr"] = {
 				function()
+					local snacks = get_snacks()
 					local path = require("oil").get_current_dir(0)
 					local entry = require("oil").get_cursor_entry()
 					local cwd = path
 					if entry and entry.type == "directory" then
 						cwd = path .. entry.parsed_name
 					end
-					Snacks.picker.grep({ cwd = cwd })
+					snacks.picker.grep({ cwd = cwd })
 				end,
 				mode = "n",
 				nowait = true,
@@ -227,7 +240,8 @@ return {
 			},
 			["gd"] = {
 				function()
-					Snacks.picker.pick({
+					local snacks = get_snacks()
+					snacks.picker.pick({
 						finder = "proc",
 						cmd = "fd",
 						args = { "--type", "d", "--hidden", "--follow", "--exclude", ".git" },

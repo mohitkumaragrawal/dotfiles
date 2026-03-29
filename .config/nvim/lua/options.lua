@@ -31,3 +31,4 @@ vim.opt.diffopt:append("vertical")
 
 vim.o.linebreak = true
 vim.o.showtabline = 0
+vim.o.laststatus = 3

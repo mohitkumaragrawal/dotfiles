@@ -2,7 +2,13 @@ require("options")
 require("keymaps")
 
 require("integrations.neovide")
-require("agent_context").setup()
+
+vim.api.nvim_create_autocmd("VimEnter", {
+	once = true,
+	callback = function()
+		require("agent_context").setup()
+	end,
+})
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -21,7 +27,6 @@ vim.diagnostic.config({
 	virtual_text = true,
 })
 require("lazy").setup("plugins")
-require("search_profiles").bootstrap()
 
 vim.filetype.add({
 	extension = {

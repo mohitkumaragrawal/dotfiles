@@ -16,6 +16,29 @@ local function terminal_tmux_navigate(key)
 	tmux_navigate(key)
 end
 
+local function scroll_half_page(direction)
+	return function()
+		local view = vim.fn.winsaveview()
+		local win_height = vim.api.nvim_win_get_height(0)
+		local half_page = math.max(1, math.floor(win_height / 2))
+		local last_line = vim.api.nvim_buf_line_count(0)
+		local target_line = math.max(1, math.min(last_line, view.lnum + (direction * half_page)))
+		local target_text = vim.api.nvim_buf_get_lines(0, target_line - 1, target_line, false)[1] or ""
+		local target_col = math.min(view.col, #target_text)
+		local max_topline = math.max(1, last_line - win_height + 1)
+
+		vim.api.nvim_win_set_cursor(0, { target_line, target_col })
+
+		view = vim.fn.winsaveview()
+		view.topline = math.max(1, math.min(target_line - math.floor(win_height / 2), max_topline))
+		vim.fn.winrestview(view)
+
+		if vim.fn.foldclosed(target_line) ~= -1 then
+			vim.cmd("normal! zv")
+		end
+	end
+end
+
 M("n", "<leader>|", "<cmd>vsplit<cr>", { desc = "Split window vertically" })
 M("n", "<leader>-", "<cmd>split<cr>", { desc = "Split window horizontally" })
 M("n", "<C-h>", function() tmux_navigate("h") end, { desc = "Move to left split" })
@@ -34,8 +57,8 @@ M("n", "<C-.>", ":vertical resize +2<CR>", { noremap = true, silent = true, desc
 M("v", "<C-c>", '"+y', { desc = "Copy to system clipboard" })
 -- M("n", "<C-a>", 'mzggVG"+y`zzz', { desc = "Copy whole file" })
 M("n", "J", "mzJ`z", { desc = "Merge bottom line" })
-M("n", "<C-u>", "<C-u>zz", { noremap = true, silent = true, desc = "Scroll up" })
-M("n", "<C-d>", "<C-d>zz", { noremap = true, silent = true, desc = "Scroll down" })
+M("n", "<C-u>", scroll_half_page(-1), { silent = true, desc = "Scroll up and center cursor" })
+M("n", "<C-d>", scroll_half_page(1), { silent = true, desc = "Scroll down and center cursor" })
 
 M("n", "<esc><esc>", ":noh<CR>", { silent = true, nowait = true })
 M("n", "<C-s>", "<cmd>w<cr>", { desc = "Save file" })
