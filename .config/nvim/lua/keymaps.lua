@@ -64,7 +64,9 @@ M("n", "<esc><esc>", ":noh<CR>", { silent = true, nowait = true })
 M("n", "<C-s>", "<cmd>w<cr>", { desc = "Save file" })
 M("n", "j", "gj", { desc = "Move down" })
 M("n", "k", "gk", { desc = "Move down" })
-M("n", "<leader>cr", vim.lsp.buf.rename, {})
+M("n", "<leader>cr", function()
+	vim.lsp.buf.rename()
+end, {})
 
 -- Copy file paths
 M("n", "<leader>xp", function()
@@ -87,8 +89,8 @@ M("n", "K", function()
 	vim.lsp.buf.hover()
 end, { desc = "Hover doc" })
 
-M("n", "<leader>ca", function ()
-  vim.lsp.buf.code_action()
+M("n", "<leader>ca", function()
+	vim.lsp.buf.code_action()
 end, { desc = "Hover doc" })
 
 M("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
