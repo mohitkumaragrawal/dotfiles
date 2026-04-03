@@ -11,16 +11,14 @@ local file_associations = {
 }
 
 local function get_snacks()
-	require("plugin_loader").load("snacks.nvim")
 	return require("snacks")
 end
 
-return {
-	"stevearc/oil.nvim",
-	cmd = { "Oil" },
-	---@module 'oil'
-	---@type oil.SetupOpts
-	opts = {
+local util = require("plugins.util")
+
+local configured = false
+
+local opts = {
 		columns = { "icon" },
 		keymaps = {
 			["gx"] = {
@@ -258,6 +256,22 @@ return {
 			},
 		},
 		delete_to_trash = true,
-	},
-	dependencies = { "nvim-tree/nvim-web-devicons" },
 }
+
+local M = {
+	specs = {
+		{ src = "https://github.com/stevearc/oil.nvim", name = "oil.nvim" },
+	},
+}
+
+function M.load()
+	if configured then
+		return
+	end
+
+	util.load("oil.nvim")
+	require("oil").setup(opts)
+	configured = true
+end
+
+return M

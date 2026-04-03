@@ -40,63 +40,76 @@ local function generate_winbar_config()
 	}
 end
 
-return {
-	"nvim-lualine/lualine.nvim",
-	dependencies = { "nvim-tree/nvim-web-devicons", "rebelot/kanagawa.nvim" },
-	config = function()
-		require("lualine").setup({
-			options = {
-				component_separators = { left = "", right = "" },
-				section_separators = { left = "", right = "" },
-				globalstatus = true,
-				disabled_filetypes = {
-					winbar = {
-						"NvimTree",
-					},
-				},
-				always_show_tabline = false,
-			},
-			sections = {
-				lualine_a = { {
-					"mode",
-					fmt = function(str)
-						return str:sub(1, 1)
-					end,
-				} },
-				lualine_b = {
-					{
-						"branch",
-						fmt = function(str)
-							local max_len = 25
-							if #str > max_len then
-								return string.sub(str, 1, 18) .. ".." .. string.sub(str, -5)
-							end
-						end,
-					},
-				},
-				lualine_c = { { "filename", path = 1 } },
-				lualine_x = {
-					{
-						function()
-							local ok, noice = pcall(require, "noice")
-							if not ok then
-								return ""
-							end
-							return noice.api.status.mode.get()
-						end,
-						cond = function()
-							local ok, noice = pcall(require, "noice")
-							return ok and noice.api.status.mode.has()
-						end,
-						color = { fg = "#ff9e64" },
-					},
-				},
-				lualine_y = {},
-				lualine_z = { { "tabs", mode = 0 } },
-			},
-			winbar = generate_winbar_config(),
-			inactive_winbar = generate_winbar_config(),
-		})
+local util = require("plugins.util")
 
-	end,
+local configured = false
+
+local M = {
+	specs = {
+		{ src = "https://github.com/nvim-lualine/lualine.nvim", name = "lualine.nvim" },
+	},
 }
+
+function M.load()
+	if configured then
+		return
+	end
+
+	util.load("lualine.nvim")
+	require("lualine").setup({
+		options = {
+			component_separators = { left = "", right = "" },
+			section_separators = { left = "", right = "" },
+			globalstatus = true,
+			disabled_filetypes = {
+				winbar = {
+					"NvimTree",
+				},
+			},
+			always_show_tabline = false,
+		},
+		sections = {
+			lualine_a = { {
+				"mode",
+				fmt = function(str)
+					return str:sub(1, 1)
+				end,
+			} },
+			lualine_b = {
+				{
+					"branch",
+					fmt = function(str)
+						local max_len = 25
+						if #str > max_len then
+							return string.sub(str, 1, 18) .. ".." .. string.sub(str, -5)
+						end
+					end,
+				},
+			},
+			lualine_c = { { "filename", path = 1 } },
+			lualine_x = {
+				{
+					function()
+						local ok, noice = pcall(require, "noice")
+						if not ok then
+							return ""
+						end
+						return noice.api.status.mode.get()
+					end,
+					cond = function()
+						local ok, noice = pcall(require, "noice")
+						return ok and noice.api.status.mode.has()
+					end,
+					color = { fg = "#ff9e64" },
+				},
+			},
+			lualine_y = {},
+			lualine_z = { { "tabs", mode = 0 } },
+		},
+		winbar = generate_winbar_config(),
+		inactive_winbar = generate_winbar_config(),
+	})
+	configured = true
+end
+
+return M

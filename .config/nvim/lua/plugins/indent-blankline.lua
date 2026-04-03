@@ -1,13 +1,27 @@
-return {
-  "lukas-reineke/indent-blankline.nvim",
-  event = { "BufReadPost", "BufNewFile" },
-  main = "ibl",
-  ---@module "ibl"
-  ---@type ibl.config
-  opts = {
-    indent = {
-      -- Use a thinner Unicode character for the indent lines
-      char = "▏",
-    },
-  },
+local util = require("plugins.util")
+
+local configured = false
+
+local opts = {
+	indent = {
+		char = "▏",
+	},
 }
+
+local M = {
+	specs = {
+		{ src = "https://github.com/lukas-reineke/indent-blankline.nvim", name = "indent-blankline.nvim" },
+	},
+}
+
+function M.load()
+	if configured then
+		return
+	end
+
+	util.load("indent-blankline.nvim")
+	require("ibl").setup(opts)
+	configured = true
+end
+
+return M

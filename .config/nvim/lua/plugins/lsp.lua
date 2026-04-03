@@ -79,57 +79,95 @@ local configure_cdm_scala_sbt = function()
 	})
 end
 
-return {
-	{
-		"williamboman/mason.nvim",
-		cmd = { "Mason", "MasonInstall", "MasonUninstall", "MasonUpdate" },
-		config = function()
-			require("mason").setup()
-		end,
-	},
-	{
-		"williamboman/mason-lspconfig.nvim",
-		event = { "BufReadPre", "BufNewFile" },
-		opts = {
-			auto_install = false,
-		},
-	},
-	{
-		"neovim/nvim-lspconfig",
-		event = { "BufReadPre", "BufNewFile" },
-		config = function()
-			vim.api.nvim_create_autocmd("LspAttach", {
-				callback = function(args)
-					local client = vim.lsp.get_client_by_id(args.data.client_id)
-					if client then
-						client.server_capabilities.semanticTokensProvider = nil
-					end
-				end,
-			})
-			configure_cdm_scala_sbt()
-		end,
-	},
-	{
-		"folke/lazydev.nvim",
-		ft = "lua",
-		opts = {
-			library = {
-				{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
-				{ path = "snacks.nvim", words = { "Snacks" } },
-			},
-		},
-	},
-	{
-		"folke/trouble.nvim",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
-		opts = {},
-		cmd = "Trouble",
-		keys = {
-			{ "<leader>xX", "<cmd>Trouble diagnostics toggle<cr>", desc = "Diagnostics (Trouble)" },
-			{ "<leader>xx", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", desc = "Buffer Diagnostics (Trouble)" },
-			{ "<leader>cs", "<cmd>Trouble symbols toggle focus=false<cr>", desc = "Symbols (Trouble)" },
-			{ "<leader>xL", "<cmd>Trouble loclist toggle<cr>", desc = "Location List (Trouble)" },
-			{ "<leader>xQ", "<cmd>Trouble qflist toggle<cr>", desc = "Quickfix List (Trouble)" },
-		},
+local util = require("plugins.util")
+
+local core_configured = false
+local trouble_configured = false
+local lazydev_configured = false
+
+local lazydev_opts = {
+	library = {
+		{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
+		{ path = "snacks.nvim", words = { "Snacks" } },
 	},
 }
+
+local M = {
+	specs = {
+		{ src = "https://github.com/williamboman/mason.nvim", name = "mason.nvim" },
+		{ src = "https://github.com/williamboman/mason-lspconfig.nvim", name = "mason-lspconfig.nvim" },
+		{ src = "https://github.com/neovim/nvim-lspconfig", name = "nvim-lspconfig" },
+		{ src = "https://github.com/folke/lazydev.nvim", name = "lazydev.nvim" },
+		{ src = "https://github.com/folke/trouble.nvim", name = "trouble.nvim" },
+	},
+}
+
+function M.load_core()
+	if core_configured then
+		return
+	end
+
+	util.load({ "mason.nvim", "mason-lspconfig.nvim", "nvim-lspconfig" })
+	require("mason").setup()
+	require("mason-lspconfig").setup({ auto_install = false })
+	vim.api.nvim_create_autocmd("LspAttach", {
+		callback = function(args)
+			local client = vim.lsp.get_client_by_id(args.data.client_id)
+			if client then
+				client.server_capabilities.semanticTokensProvider = nil
+			end
+		end,
+	})
+	configure_cdm_scala_sbt()
+	core_configured = true
+end
+
+function M.load_lazydev()
+	if lazydev_configured then
+		return
+	end
+
+	util.load("lazydev.nvim")
+	require("lazydev").setup(lazydev_opts)
+	lazydev_configured = true
+end
+
+function M.load_trouble()
+	if trouble_configured then
+		return
+	end
+
+	util.load("trouble.nvim")
+	require("trouble").setup({})
+	trouble_configured = true
+end
+
+function M.register()
+	util.on_events({ "BufReadPre", "BufNewFile" }, M.load_core, { once = true })
+	util.on_cmdundefined({ "Mason", "MasonInstall", "MasonUninstall", "MasonUpdate" }, M.load_core)
+	util.on_filetypes("lua", M.load_lazydev)
+	util.on_cmdundefined("Trouble", M.load_trouble)
+
+	vim.keymap.set("n", "<leader>xX", function()
+		M.load_trouble()
+		vim.cmd("Trouble diagnostics toggle")
+	end, { desc = "Diagnostics (Trouble)" })
+	vim.keymap.set("n", "<leader>xx", function()
+		M.load_trouble()
+		vim.cmd("Trouble diagnostics toggle filter.buf=0")
+	end, { desc = "Buffer Diagnostics (Trouble)" })
+	vim.keymap.set("n", "<leader>cs", function()
+		M.load_trouble()
+		vim.cmd("Trouble symbols toggle focus=false")
+	end, { desc = "Symbols (Trouble)" })
+	vim.keymap.set("n", "<leader>xL", function()
+		M.load_trouble()
+		vim.cmd("Trouble loclist toggle")
+	end, { desc = "Location List (Trouble)" })
+	vim.keymap.set("n", "<leader>xQ", function()
+		M.load_trouble()
+		vim.cmd("Trouble qflist toggle")
+	end, { desc = "Quickfix List (Trouble)" })
+end
+
+return M

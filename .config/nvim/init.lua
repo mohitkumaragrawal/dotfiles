@@ -13,7 +13,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
 vim.diagnostic.config({
 	virtual_text = true,
 })
-require("plugin_loader").setup()
+require("plugins").setup()
 
 vim.filetype.add({
 	extension = {

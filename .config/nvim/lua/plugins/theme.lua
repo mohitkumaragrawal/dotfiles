@@ -1,7 +1,8 @@
-return {
-	{
-		"rebelot/kanagawa.nvim",
-		opts = {
+local util = require("plugins.util")
+
+local configured = false
+
+local opts = {
 			colors = {
 				theme = {
 					all = {
@@ -42,26 +43,37 @@ return {
 					IblScope = { fg = theme.ui.bg_p2, bg = "NONE" },
 				}
 			end,
-		},
-		lazy = false,
-		priority = 1000,
-		config = function(_, opts)
-			require("kanagawa").setup(opts)
-			vim.api.nvim_create_autocmd("ColorScheme", {
-				pattern = "kanagawa-dragon",
-				callback = function()
-					vim.api.nvim_set_hl(0, "Normal", { bg = "#000000" })
-					local colors = require("kanagawa.colors").setup({ theme = "dragon" })
-					local theme = colors.theme
-					local c = require("kanagawa.lib.color")
-					local dark_cursor_line = c(theme.ui.bg_p1):blend("#000000", 0.7):to_hex()
-					vim.api.nvim_set_hl(0, "CursorLine", { bg = dark_cursor_line })
-					local dark_indent = c(theme.ui.bg_p1):blend("#000000", 0.5):to_hex()
-					vim.api.nvim_set_hl(0, "IblIndent", { fg = dark_indent })
-					vim.api.nvim_set_hl(0, "IblWhitespace", { fg = dark_indent })
-				end,
-			})
-			vim.cmd.colorscheme("kanagawa")
-		end,
-	}
+		}
+
+local M = {
+	specs = {
+		{ src = "https://github.com/rebelot/kanagawa.nvim", name = "kanagawa.nvim" },
+	},
 }
+
+function M.load()
+	if configured then
+		return
+	end
+
+	util.load("kanagawa.nvim")
+	require("kanagawa").setup(opts)
+	vim.api.nvim_create_autocmd("ColorScheme", {
+		pattern = "kanagawa-dragon",
+		callback = function()
+			vim.api.nvim_set_hl(0, "Normal", { bg = "#000000" })
+			local colors = require("kanagawa.colors").setup({ theme = "dragon" })
+			local theme = colors.theme
+			local c = require("kanagawa.lib.color")
+			local dark_cursor_line = c(theme.ui.bg_p1):blend("#000000", 0.7):to_hex()
+			vim.api.nvim_set_hl(0, "CursorLine", { bg = dark_cursor_line })
+			local dark_indent = c(theme.ui.bg_p1):blend("#000000", 0.5):to_hex()
+			vim.api.nvim_set_hl(0, "IblIndent", { fg = dark_indent })
+			vim.api.nvim_set_hl(0, "IblWhitespace", { fg = dark_indent })
+		end,
+	})
+	vim.cmd.colorscheme("kanagawa")
+	configured = true
+end
+
+return M
