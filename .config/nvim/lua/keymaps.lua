@@ -64,9 +64,6 @@ M("n", "<esc><esc>", ":noh<CR>", { silent = true, nowait = true })
 M("n", "<C-s>", "<cmd>w<cr>", { desc = "Save file" })
 M("n", "j", "gj", { desc = "Move down" })
 M("n", "k", "gk", { desc = "Move down" })
-
--- M("n", "gd", vim.lsp.buf.definition, {})
--- M("n", "gr", vim.lsp.buf.references, {})
 M("n", "<leader>cr", vim.lsp.buf.rename, {})
 
 -- Copy file paths
@@ -80,8 +77,6 @@ local function toggle_diagnostics_virtual_text()
 	local new_config = not vim.diagnostic.config().virtual_text
 	vim.diagnostic.config({
 		virtual_text = new_config,
-		-- You can also toggle other diagnostic displays here, like signs
-		-- signs = new_config,
 	})
 end
 
@@ -97,32 +92,6 @@ M("n", "<leader>ca", function ()
 end, { desc = "Hover doc" })
 
 M("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
-
--- DAP
--- M("n", "<F5>", '<cmd>lua require("dap").continue()<cr>', { desc = "DAP: Continue" })
--- M("n", "<F6>", '<cmd>lua require("dap").terminate()<cr>', { desc = "DAP: Terminate" })
--- M("n", "<F10>", '<cmd>lua require("dap").step_over()<cr>', { desc = "DAP: Step Over" })
--- M("n", "<F11>", '<cmd>lua require("dap").step_into()<cr>', { desc = "DAP: Step Into" })
--- M("n", "<F12>", '<cmd>lua require("dap").step_out()<cr>', { desc = "DAP: Step Out" })
--- M("n", "<leader>b", '<cmd>lua require("dap").toggle_breakpoint()<cr>', { desc = "DAP: Toggle Breakpoint" })
--- M(
--- 	"n",
--- 	"<leader>B",
--- 	'<cmd>lua require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: "))<cr>',
--- 	{ desc = "DAP: Set Conditional Breakpoint" }
--- )
--- M(
--- 	"n",
--- 	"<leader>lp",
--- 	'<cmd>lua require("dap").set_breakpoint(nil, nil, vim.fn.input("Log point message: "))<cr>',
--- 	{ desc = "DAP: Set Logpoint" }
--- )
--- M("n", "<leader>dr", '<cmd>lua require("dap").repl.open()<cr>', { desc = "DAP: Open REPL" })
--- M("n", "<leader>dl", '<cmd>lua require("dap").run_last()<cr>', { desc = "DAP: Run Last" })
--- M("n", "<leader>du", '<cmd>lua require("dapui").toggle()<cr>', { desc = "DAP: Toggle UI" })
-
-M({ "n", "v" }, "<leader>ac", "<CMD>Augment chat<CR>", { desc = "Augment chat" })
-
 M("n", "<leader>bd", ":bp<bar>sp<bar>bn<bar>bd<CR>")
 
 -- Tabs
@@ -139,14 +108,6 @@ M("n", "<leader>7", "7gt", { desc = "Go to tab 7" })
 M("n", "<leader>8", "8gt", { desc = "Go to tab 8" })
 M("n", "<leader>9", "9gt", { desc = "Go to tab 9" })
 M("n", "<leader>0", "10gt", { desc = "Go to tab 10" })
-M("n", "<leader>$", function()
-	vim.ui.input({ prompt = "Enter Tab Name: " }, function(input)
-		-- If the user provided input (didn't cancel), run the command
-		if input then
-			vim.cmd("LualineRenameTab " .. input)
-		end
-	end)
-end, { desc = "Rename tab" })
 
 M("n", "[t", ":tabprevious<CR>", { desc = "Previous tab" })
 M("n", "]t", ":tabnext<CR>", { desc = "Next tab" })

@@ -63,15 +63,5 @@ return {
 			})
 			vim.cmd.colorscheme("kanagawa")
 		end,
-	},
-	{
-		"catppuccin/nvim",
-		name = "catppuccin",
-		lazy = true,
-		priority = 1000,
-		config = function(_, opts)
-			require("catppuccin").setup(opts)
-			-- vim.cmd.colorscheme("catppuccin")
-		end,
-	},
+	}
 }
