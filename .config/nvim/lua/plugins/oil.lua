@@ -11,18 +11,12 @@ local file_associations = {
 }
 
 local function get_snacks()
-	local ok, snacks = pcall(require, "snacks")
-	if ok then
-		return snacks
-	end
-
-	require("lazy").load({ plugins = { "snacks.nvim" } })
+	require("plugin_loader").load("snacks.nvim")
 	return require("snacks")
 end
 
 return {
 	"stevearc/oil.nvim",
-	lazy = true,
 	cmd = { "Oil" },
 	---@module 'oil'
 	---@type oil.SetupOpts
@@ -266,5 +260,4 @@ return {
 		delete_to_trash = true,
 	},
 	dependencies = { "nvim-tree/nvim-web-devicons" },
-	lazy = false,
 }
