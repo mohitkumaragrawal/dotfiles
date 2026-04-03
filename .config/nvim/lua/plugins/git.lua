@@ -1,9 +1,15 @@
 return {
-	{ "tpope/vim-fugitive" },
-	{ "tpope/vim-rhubarb" },
+	{
+		"tpope/vim-fugitive",
+		cmd = { "Git", "G", "Gdiffsplit", "Gvdiffsplit", "Gread", "Gwrite", "Ggrep", "GBrowse" },
+	},
+	{
+		"tpope/vim-rhubarb",
+		cmd = { "GBrowse" },
+	},
 	{
 		"lewis6991/gitsigns.nvim",
-		lazy = false,
+		event = { "BufReadPre", "BufNewFile" },
 		opts = {
 			signs = {
 				add = { text = "▎" },

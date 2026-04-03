@@ -1,5 +1,6 @@
 return {
   "otavioschwanck/arrow.nvim",
+  event = "VeryLazy",
   dependencies = {
     { "nvim-tree/nvim-web-devicons" },
     -- or if using `mini.icons`
@@ -8,6 +9,6 @@ return {
   opts = {
     show_icons = true,
     leader_key = 's', -- Recommended to be a single key
-    buffer_leader_key = 'm', -- Per Buffer Mappings
+    buffer_leader_key = '\\', -- Per Buffer Mappings
   }
 }

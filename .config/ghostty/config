@@ -58,6 +58,70 @@ keybind = performable:ctrl+v=paste_from_clipboard
 # Unbind ctrl+, in case it is mapped to a default action (like open config)
 keybind = ctrl+,=unbind
 
-gtk-tabs-location = hidden
+# # tmux-style leader on Ctrl-A using trigger sequences.
+# # Ctrl-A then Ctrl-A (or a) sends a literal Ctrl-A through.
+# # Ctrl-A then Escape cancels the sequence and sends Ctrl-A through.
+# keybind = ctrl+a>ctrl+a=text:\x01
+# keybind = ctrl+a>a=text:\x01
+# keybind = ctrl+a>escape=end_key_sequence
 
+# # Tabs and windows
+# keybind = ctrl+a>c=new_tab
+# keybind = ctrl+a>n=next_tab
+# keybind = ctrl+a>p=previous_tab
+# keybind = ctrl+a>digit_1=goto_tab:1
+# keybind = ctrl+a>digit_2=goto_tab:2
+# keybind = ctrl+a>digit_3=goto_tab:3
+# keybind = ctrl+a>digit_4=goto_tab:4
+# keybind = ctrl+a>digit_5=goto_tab:5
+# keybind = ctrl+a>digit_6=goto_tab:6
+# keybind = ctrl+a>digit_7=goto_tab:7
+# keybind = ctrl+a>digit_8=goto_tab:8
+# keybind = ctrl+a>digit_9=last_tab
+# keybind = ctrl+a>w=new_window
+
+# # Splits
+# keybind = ctrl+a>minus=new_split:down
+# keybind = ctrl+a>shift+backslash=new_split:right
+# keybind = ctrl+a>|=new_split:right
+# keybind = ctrl+a>h=goto_split:left
+# keybind = ctrl+a>j=goto_split:down
+# keybind = ctrl+a>k=goto_split:up
+# keybind = ctrl+a>l=goto_split:right
+# keybind = ctrl+a>o=goto_split:next
+# keybind = ctrl+a>z=toggle_split_zoom
+# keybind = ctrl+a>x=close_surface
+# keybind = ctrl+a>shift+h=resize_split:left,30
+# keybind = ctrl+a>shift+j=resize_split:down,30
+# keybind = ctrl+a>shift+k=resize_split:up,30
+# keybind = ctrl+a>shift+l=resize_split:right,30
+# keybind = ctrl+a>e=equalize_splits
+
+# # Experimental copy mode.
+# # This is not full tmux parity because Ghostty still lacks keyboard-driven
+# # selection creation, but it gets you modal scrollback navigation and search.
+# keybind = ctrl+a>bracket_left=toggle_readonly
+# keybind = chain=activate_key_table:copy_mode
+
+# keybind = copy_mode/
+# keybind = copy_mode/escape=toggle_readonly
+# keybind = chain=deactivate_all_key_tables
+# keybind = copy_mode/q=toggle_readonly
+# keybind = chain=deactivate_all_key_tables
+# keybind = copy_mode/j=scroll_page_lines:1
+# keybind = copy_mode/k=scroll_page_lines:-1
+# keybind = copy_mode/ctrl+u=scroll_page_fractional:-0.5
+# keybind = copy_mode/ctrl+d=scroll_page_fractional:+0.5
+# keybind = copy_mode/ctrl+b=scroll_page_up
+# keybind = copy_mode/ctrl+f=scroll_page_down
+# keybind = copy_mode/g=scroll_to_top
+# keybind = copy_mode/shift+g=scroll_to_bottom
+# keybind = copy_mode/shift+h=jump_to_prompt:-1
+# keybind = copy_mode/shift+l=jump_to_prompt:1
+# keybind = copy_mode/slash=start_search
+# keybind = copy_mode/n=navigate_search:next
+# keybind = copy_mode/shift+n=navigate_search:previous
+# keybind = copy_mode/performable:y=copy_to_clipboard
+# keybind = copy_mode/performable:enter=copy_to_clipboard
+# keybind = copy_mode/o=write_scrollback_file:open
 

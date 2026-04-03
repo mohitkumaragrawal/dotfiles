@@ -1,4 +1,10 @@
 return {
-	{ "augmentcode/augment.vim" },
-	{ "github/copilot.vim" },
+	{
+		"augmentcode/augment.vim",
+		cmd = { "Augment" },
+	},
+	{
+		"github/copilot.vim",
+		event = "InsertEnter",
+	},
 }

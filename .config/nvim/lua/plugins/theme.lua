@@ -15,11 +15,14 @@ return {
 			keywordStyle = { italic = false },
 			overrides = function(colors)
 				local theme = colors.theme
+				local c = require("kanagawa.lib.color")
+				local hover_bg = c(theme.ui.float.bg):blend(theme.ui.bg, 0.35):to_hex()
 				local makeDiagnosticColor = function(color)
-					local c = require("kanagawa.lib.color")
 					return { fg = color, bg = c(color):blend(theme.ui.bg, 0.95):to_hex() }
 				end
 				return {
+					LspHoverNormal = { fg = theme.ui.float.fg, bg = hover_bg },
+					LspHoverBorder = { fg = colors.palette.springBlue, bg = hover_bg },
 					NormalFloat = { bg = "none" },
 					FloatTitle = { bg = "none" },
 					FloatBorder = { bg = "NONE", fg = colors.palette.springBlue },
@@ -64,6 +67,7 @@ return {
 	{
 		"catppuccin/nvim",
 		name = "catppuccin",
+		lazy = true,
 		priority = 1000,
 		config = function(_, opts)
 			require("catppuccin").setup(opts)

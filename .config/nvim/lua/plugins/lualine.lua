@@ -43,6 +43,7 @@ end
 return {
 	"nvim-lualine/lualine.nvim",
 	dependencies = { "nvim-tree/nvim-web-devicons", "rebelot/kanagawa.nvim" },
+	lazy = false,
 	config = function()
 		require("lualine").setup({
 			options = {
@@ -76,12 +77,21 @@ return {
 				},
 				lualine_c = { { "filename", path = 1 } },
 				lualine_x = {
-          {
-            require("noice").api.status.mode.get,
-            cond = require("noice").api.status.mode.has,
-            color = { fg = "#ff9e64" },
-          },
-        },
+					{
+						function()
+							local ok, noice = pcall(require, "noice")
+							if not ok then
+								return ""
+							end
+							return noice.api.status.mode.get()
+						end,
+						cond = function()
+							local ok, noice = pcall(require, "noice")
+							return ok and noice.api.status.mode.has()
+						end,
+						color = { fg = "#ff9e64" },
+					},
+				},
 				lualine_y = {},
 				lualine_z = { { "tabs", mode = 0 } },
 			},

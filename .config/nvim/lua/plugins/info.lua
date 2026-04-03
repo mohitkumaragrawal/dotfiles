@@ -1,1 +1,4 @@
-return { "HiPhish/info.vim" }
+return {
+	"HiPhish/info.vim",
+	event = "VeryLazy",
+}

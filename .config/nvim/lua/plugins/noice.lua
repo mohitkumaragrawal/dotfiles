@@ -18,6 +18,14 @@ return {
 
 			hover = {
 				silent = true,
+				opts = {
+					win_options = {
+						winhighlight = {
+							Normal = "LspHoverNormal",
+							FloatBorder = "LspHoverBorder",
+						},
+					},
+				},
 			},
 		},
 		-- you can enable a preset for easier configuration
