@@ -15,6 +15,7 @@ managed_paths=(
   ".config/nvim"
   ".config/yazi"
   ".config/zathura"
+  ".config/alacritty"
 )
 
 usage() {
