@@ -8,6 +8,7 @@ local state = {
 	config = { repos = {} },
 	repo_cache = {},
 }
+local setup_done = false
 
 local function notify(message, level)
 	vim.notify(message, level or vim.log.levels.INFO, { title = "Search Profiles" })
@@ -165,6 +166,13 @@ local function ensure_repo_cache(root)
 	return cached
 end
 
+local function prime_current_repo()
+	local root = find_git_root(current_context_path())
+	if root then
+		ensure_repo_cache(root)
+	end
+end
+
 local function scope_hint(profile)
 	local grep = profile.grep or {}
 	if type(grep.cwd) == "string" and grep.cwd ~= "" then
@@ -219,7 +227,12 @@ local function open_profile_picker(root, profile, picker_kind)
 end
 
 function M.bootstrap()
-	if state.status == "loading" or state.status == "ready" then
+	if state.status == "loading" then
+		return
+	end
+
+	if state.status == "ready" then
+		prime_current_repo()
 		return
 	end
 
@@ -238,11 +251,40 @@ function M.bootstrap()
 		state.status = "ready"
 		state.error = nil
 
-		local root = find_git_root(current_context_path())
-		if root then
-			ensure_repo_cache(root)
-		end
+		prime_current_repo()
 	end)
+end
+
+function M.setup()
+	if setup_done then
+		return
+	end
+
+	setup_done = true
+
+	local group = vim.api.nvim_create_augroup("SearchProfilesStartup", { clear = true })
+
+	vim.api.nvim_create_autocmd("VimEnter", {
+		group = group,
+		once = true,
+		callback = function()
+			M.bootstrap()
+		end,
+	})
+
+	vim.api.nvim_create_autocmd({ "BufEnter", "DirChanged" }, {
+		group = group,
+		callback = function()
+			if state.status == "idle" then
+				M.bootstrap()
+				return
+			end
+
+			if state.status == "ready" then
+				prime_current_repo()
+			end
+		end,
+	})
 end
 
 function M.status()

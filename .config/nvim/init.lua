@@ -26,6 +26,7 @@ vim.diagnostic.config({
 	virtual_text = true,
 })
 require("plugins").setup()
+require("search_profiles").setup()
 
 vim.filetype.add({
 	extension = {
