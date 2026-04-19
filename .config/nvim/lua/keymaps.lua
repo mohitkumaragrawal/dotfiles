@@ -1,50 +1,99 @@
 local M = vim.keymap.set
 
-local tmux_directions = {
-	h = "Left",
-	j = "Down",
-	k = "Up",
-	l = "Right",
-}
-
-local function tmux_navigate(key)
-	vim.cmd("TmuxNavigate" .. tmux_directions[key])
+local function clamp(value, min_value, max_value)
+	return math.max(min_value, math.min(value, max_value))
 end
 
-local function terminal_tmux_navigate(key)
-	vim.cmd("stopinsert")
-	tmux_navigate(key)
+local function normalize_visible_line(lnum)
+	local fold_start = vim.fn.foldclosed(lnum)
+	if fold_start ~= -1 then
+		return fold_start
+	end
+
+	return lnum
 end
 
-local function scroll_half_page(direction)
-	return function()
-		local view = vim.fn.winsaveview()
-		local win_height = vim.api.nvim_win_get_height(0)
-		local half_page = math.max(1, math.floor(win_height / 2))
-		local last_line = vim.api.nvim_buf_line_count(0)
-		local target_line = math.max(1, math.min(last_line, view.lnum + (direction * half_page)))
-		local target_text = vim.api.nvim_buf_get_lines(0, target_line - 1, target_line, false)[1] or ""
-		local target_col = math.min(view.col, #target_text)
-		local max_topline = math.max(1, last_line - win_height + 1)
+local function next_visible_line(lnum, last_line)
+	if lnum >= last_line then
+		return last_line
+	end
 
-		vim.api.nvim_win_set_cursor(0, { target_line, target_col })
+	local fold_end = vim.fn.foldclosedend(lnum)
+	if fold_end ~= -1 then
+		return math.min(fold_end + 1, last_line)
+	end
 
-		view = vim.fn.winsaveview()
-		view.topline = math.max(1, math.min(target_line - math.floor(win_height / 2), max_topline))
-		vim.fn.winrestview(view)
+	local next_line = lnum + 1
+	local next_fold_start = vim.fn.foldclosed(next_line)
+	if next_fold_start ~= -1 then
+		return next_fold_start
+	end
 
-		if vim.fn.foldclosed(target_line) ~= -1 then
-			vim.cmd("normal! zv")
+	return next_line
+end
+
+local function prev_visible_line(lnum)
+	if lnum <= 1 then
+		return 1
+	end
+
+	local fold_start = vim.fn.foldclosed(lnum)
+	if fold_start ~= -1 then
+		return math.max(fold_start - 1, 1)
+	end
+
+	local prev_line = lnum - 1
+	local prev_fold_start = vim.fn.foldclosed(prev_line)
+	if prev_fold_start ~= -1 then
+		return prev_fold_start
+	end
+
+	return prev_line
+end
+
+local function move_visible_lines(start_line, steps, last_line)
+	local line = normalize_visible_line(clamp(start_line, 1, last_line))
+
+	if steps > 0 then
+		for _ = 1, steps do
+			local next_line = next_visible_line(line, last_line)
+			if next_line == line then
+				break
+			end
+			line = next_line
+		end
+	elseif steps < 0 then
+		for _ = 1, math.abs(steps) do
+			local prev_line = prev_visible_line(line)
+			if prev_line == line then
+				break
+			end
+			line = prev_line
 		end
 	end
+
+	return line
+end
+
+local function centered_half_page(direction)
+	local win = vim.api.nvim_get_current_win()
+	local last_line = vim.api.nvim_buf_line_count(0)
+	local height = vim.api.nvim_win_get_height(win)
+	local page_size = math.max(1, math.floor(height / 2))
+	local center_offset = math.max(0, math.floor((height - 1) / 2))
+	local cursor_line = vim.api.nvim_win_get_cursor(win)[1]
+	local target_line = move_visible_lines(cursor_line, direction * page_size, last_line)
+	local target_topline = move_visible_lines(target_line, -center_offset, last_line)
+	local view = vim.fn.winsaveview()
+
+	view.lnum = target_line
+	view.topline = target_topline
+
+	vim.fn.winrestview(view)
 end
 
 M("n", "<leader>|", "<cmd>vsplit<cr>", { desc = "Split window vertically" })
 M("n", "<leader>-", "<cmd>split<cr>", { desc = "Split window horizontally" })
-M("n", "<C-h>", function() tmux_navigate("h") end, { desc = "Move to left split" })
-M("n", "<C-j>", function() tmux_navigate("j") end, { desc = "Move to below split" })
-M("n", "<C-k>", function() tmux_navigate("k") end, { desc = "Move to above split" })
-M("n", "<C-l>", function() tmux_navigate("l") end, { desc = "Move to right split" })
 M("v", "<C-h>", "<C-w>h", { desc = "Move to left window" })
 M("v", "<C-j>", "<C-w>j", { desc = "Move to below window" })
 M("v", "<C-k>", "<C-w>k", { desc = "Move to above window" })
@@ -57,8 +106,12 @@ M("n", "<C-.>", ":vertical resize +2<CR>", { noremap = true, silent = true, desc
 M("v", "<C-c>", '"+y', { desc = "Copy to system clipboard" })
 -- M("n", "<C-a>", 'mzggVG"+y`zzz', { desc = "Copy whole file" })
 M("n", "J", "mzJ`z", { desc = "Merge bottom line" })
-M("n", "<C-u>", scroll_half_page(-1), { silent = true, desc = "Scroll up and center cursor" })
-M("n", "<C-d>", scroll_half_page(1), { silent = true, desc = "Scroll down and center cursor" })
+M("n", "<C-u>", function()
+	centered_half_page(-1)
+end, { silent = true, desc = "Scroll up and center cursor" })
+M("n", "<C-d>", function()
+	centered_half_page(1)
+end, { silent = true, desc = "Scroll down and center cursor" })
 
 M("n", "<esc><esc>", ":noh<CR>", { silent = true, nowait = true })
 M("n", "<C-s>", "<cmd>w<cr>", { desc = "Save file" })
@@ -93,7 +146,6 @@ M("n", "<leader>ca", function()
 	vim.lsp.buf.code_action()
 end, { desc = "Hover doc" })
 
-M("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 M("n", "<leader>bd", ":bp<bar>sp<bar>bn<bar>bd<CR>")
 
 -- Tabs
@@ -116,11 +168,6 @@ M("n", "]t", ":tabnext<CR>", { desc = "Next tab" })
 
 -- escape from terminal mode
 M("t", "<C-Space>", "<C-\\><C-n>", { desc = "Escape terminal mode" })
-
-M("t", "<C-h>", function() terminal_tmux_navigate("h") end, { desc = "Move left" })
-M("t", "<C-j>", function() terminal_tmux_navigate("j") end, { desc = "Move down" })
-M("t", "<C-k>", function() terminal_tmux_navigate("k") end, { desc = "Move up" })
-M("t", "<C-l>", function() terminal_tmux_navigate("l") end, { desc = "Move right" })
 
 -- keymaps for creating terminals similar to tmux splits, using Ctrl-b as prefix
 M("n", "<C-Space>|", "<cmd>vsplit | terminal<cr>i", { desc = "Vertical terminal" })

@@ -1,4 +1,8 @@
-local M = {}
+local packadd = require("plugins.util").packadd
+
+local M = {
+	name = "kanagawa.nvim",
+}
 
 local opts = {
 	colors = {
@@ -44,25 +48,24 @@ local opts = {
 	end,
 }
 
-function M.setup(setup_once)
-	setup_once("theme", "kanagawa.nvim", function()
-		require("kanagawa").setup(opts)
-		vim.api.nvim_create_autocmd("ColorScheme", {
-			pattern = "kanagawa-dragon",
-			callback = function()
-				vim.api.nvim_set_hl(0, "Normal", { bg = "#000000" })
-				local colors = require("kanagawa.colors").setup({ theme = "dragon" })
-				local theme = colors.theme
-				local c = require("kanagawa.lib.color")
-				local dark_cursor_line = c(theme.ui.bg_p1):blend("#000000", 0.7):to_hex()
-				vim.api.nvim_set_hl(0, "CursorLine", { bg = dark_cursor_line })
-				local dark_indent = c(theme.ui.bg_p1):blend("#000000", 0.5):to_hex()
-				vim.api.nvim_set_hl(0, "IblIndent", { fg = dark_indent })
-				vim.api.nvim_set_hl(0, "IblWhitespace", { fg = dark_indent })
-			end,
-		})
-		vim.cmd.colorscheme("kanagawa")
-	end)
+function M.setup()
+	packadd(M.name)
+	require("kanagawa").setup(opts)
+	vim.api.nvim_create_autocmd("ColorScheme", {
+		pattern = "kanagawa-dragon",
+		callback = function()
+			vim.api.nvim_set_hl(0, "Normal", { bg = "#000000" })
+			local colors = require("kanagawa.colors").setup({ theme = "dragon" })
+			local theme = colors.theme
+			local c = require("kanagawa.lib.color")
+			local dark_cursor_line = c(theme.ui.bg_p1):blend("#000000", 0.7):to_hex()
+			vim.api.nvim_set_hl(0, "CursorLine", { bg = dark_cursor_line })
+			local dark_indent = c(theme.ui.bg_p1):blend("#000000", 0.5):to_hex()
+			vim.api.nvim_set_hl(0, "IblIndent", { fg = dark_indent })
+			vim.api.nvim_set_hl(0, "IblWhitespace", { fg = dark_indent })
+		end,
+	})
+	vim.cmd.colorscheme("kanagawa")
 end
 
 return M

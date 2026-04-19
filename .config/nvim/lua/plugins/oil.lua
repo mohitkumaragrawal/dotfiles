@@ -1,4 +1,8 @@
-local M = {}
+local packadd = require("plugins.util").packadd
+
+local M = {
+	name = "oil.nvim",
+}
 
 local detail_popup_id = nil
 
@@ -228,10 +232,13 @@ local opts = {
 	delete_to_trash = true,
 }
 
-function M.setup(setup_once)
-	setup_once("oil", "oil.nvim", function()
-		require("oil").setup(opts)
-	end)
+function M.setup()
+	packadd(M.name)
+	vim.keymap.set("n", "-", function()
+		require("oil").open()
+	end, { desc = "Open parent directory" })
+
+	require("oil").setup(opts)
 end
 
 return M

@@ -1,4 +1,8 @@
-local M = {}
+local packadd = require("plugins.util").packadd
+
+local M = {
+	name = "lualine.nvim",
+}
 
 local function generate_winbar_config()
 	return {
@@ -39,60 +43,60 @@ local function generate_winbar_config()
 	}
 end
 
-function M.setup(setup_once)
-	setup_once("lualine", "lualine.nvim", function()
-		require("lualine").setup({
-			options = {
-				component_separators = { left = "", right = "" },
-				section_separators = { left = "", right = "" },
-				globalstatus = true,
-				disabled_filetypes = {
-					winbar = { "NvimTree" },
-				},
-				always_show_tabline = false,
+function M.setup()
+	packadd(M.name)
+
+	require("lualine").setup({
+		options = {
+			component_separators = { left = "", right = "" },
+			section_separators = { left = "", right = "" },
+			globalstatus = true,
+			disabled_filetypes = {
+				winbar = { "NvimTree" },
 			},
-			sections = {
-				lualine_a = { {
-					"mode",
+			always_show_tabline = false,
+		},
+		sections = {
+			lualine_a = { {
+				"mode",
+				fmt = function(str)
+					return str:sub(1, 1)
+				end,
+			} },
+			lualine_b = {
+				{
+					"branch",
 					fmt = function(str)
-						return str:sub(1, 1)
+						local max_len = 25
+						if #str > max_len then
+							return string.sub(str, 1, 18) .. ".." .. string.sub(str, -5)
+						end
 					end,
-				} },
-				lualine_b = {
-					{
-						"branch",
-						fmt = function(str)
-							local max_len = 25
-							if #str > max_len then
-								return string.sub(str, 1, 18) .. ".." .. string.sub(str, -5)
-							end
-						end,
-					},
 				},
-				lualine_c = { { "filename", path = 1 } },
-				lualine_x = {
-					{
-						function()
-							local ok, noice = pcall(require, "noice")
-							if not ok then
-								return ""
-							end
-							return noice.api.status.mode.get()
-						end,
-						cond = function()
-							local ok, noice = pcall(require, "noice")
-							return ok and noice.api.status.mode.has()
-						end,
-						color = { fg = "#ff9e64" },
-					},
-				},
-				lualine_y = {},
-				lualine_z = { { "tabs", mode = 0 } },
 			},
-			winbar = generate_winbar_config(),
-			inactive_winbar = generate_winbar_config(),
-		})
-	end)
+			lualine_c = { { "filename", path = 1 } },
+			lualine_x = {
+				{
+					function()
+						local ok, noice = pcall(require, "noice")
+						if not ok then
+							return ""
+						end
+						return noice.api.status.mode.get()
+					end,
+					cond = function()
+						local ok, noice = pcall(require, "noice")
+						return ok and noice.api.status.mode.has()
+					end,
+					color = { fg = "#ff9e64" },
+				},
+			},
+			lualine_y = {},
+			lualine_z = { { "tabs", mode = 0 } },
+		},
+		winbar = generate_winbar_config(),
+		inactive_winbar = generate_winbar_config(),
+	})
 end
 
 return M
