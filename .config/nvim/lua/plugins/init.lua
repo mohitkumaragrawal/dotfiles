@@ -18,6 +18,7 @@ local plugins = {
 	require("plugins.mason"),
 	require("plugins.mason-lspconfig"),
 	require("plugins.nvim-lspconfig"),
+	require("plugins.nvim-treesitter"),
 	require("plugins.lazydev"),
 	require("plugins.fidget"),
 	require("plugins.trouble"),

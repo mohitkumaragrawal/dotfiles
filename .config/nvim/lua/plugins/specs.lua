@@ -12,6 +12,7 @@ return {
 	{ src = "https://github.com/williamboman/mason.nvim", name = "mason.nvim" },
 	{ src = "https://github.com/williamboman/mason-lspconfig.nvim", name = "mason-lspconfig.nvim" },
 	{ src = "https://github.com/neovim/nvim-lspconfig", name = "nvim-lspconfig" },
+	{ src = "https://github.com/nvim-treesitter/nvim-treesitter", name = "nvim-treesitter" },
 	{ src = "https://github.com/folke/lazydev.nvim", name = "lazydev.nvim" },
 	{ src = "https://github.com/folke/trouble.nvim", name = "trouble.nvim" },
 	{ src = "https://github.com/nvim-lualine/lualine.nvim", name = "lualine.nvim" },
