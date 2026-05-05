@@ -52,9 +52,6 @@ shell-integration-features = no-cursor
 
 font-family = JetBrainsMono Nerd Font
 
-keybind = performable:ctrl+c=copy_to_clipboard
-keybind = performable:ctrl+v=paste_from_clipboard
-
 # Unbind ctrl+, in case it is mapped to a default action (like open config)
 keybind = ctrl+,=unbind
 
