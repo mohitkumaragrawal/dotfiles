@@ -27,6 +27,7 @@ return {
 	{ src = "https://github.com/folke/snacks.nvim", name = "snacks.nvim" },
 	{ src = "https://github.com/sindrets/diffview.nvim", name = "diffview.nvim" },
 	{ src = "https://github.com/rebelot/kanagawa.nvim", name = "kanagawa.nvim" },
+	{ src = "https://github.com/catppuccin/nvim", name = "catppuccin" },
 	{ src = "https://github.com/tpope/vim-commentary", name = "vim-commentary" },
 	{ src = "https://github.com/tpope/vim-surround", name = "vim-surround" },
 	{ src = "https://github.com/christoomey/vim-tmux-navigator", name = "vim-tmux-navigator" },

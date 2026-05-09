@@ -14,6 +14,7 @@ local plugins = {
 	require("plugins.vim-commentary"),
 	require("plugins.vim-surround"),
 	require("plugins.vim-fugitive"),
+	require("plugins.diffview"),
 	require("plugins.neogit"),
 	require("plugins.gitsigns"),
 	require("plugins.mason"),
