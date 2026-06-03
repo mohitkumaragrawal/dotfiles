@@ -46,4 +46,3 @@ config.window_decorations = 'RESIZE'
 config.native_macos_fullscreen_mode = true
 
 return config
-

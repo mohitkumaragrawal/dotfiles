@@ -65,7 +65,7 @@ function M.setup()
 			vim.api.nvim_set_hl(0, "IblWhitespace", { fg = dark_indent })
 		end,
 	})
-	vim.cmd.colorscheme("kanagawa")
+	vim.cmd.colorscheme("catppuccin-nvim")
 end
 
 return M

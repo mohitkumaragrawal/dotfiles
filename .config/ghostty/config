@@ -43,8 +43,8 @@
 # resize-overlay-duration = 4s 200ms
 
 
-theme = Kanagawa Wave
-# theme = catppuccin-mocha
+# theme = Kanagawa Wave
+theme = catppuccin-mocha
 
 cursor-style = block
 cursor-style-blink = false
