@@ -11,6 +11,9 @@ Personal dotfiles for:
 - Zathura
 - Neovim
 
+The tmux setup vendors the Catppuccin tmux runtime under `.config/tmux` so the
+theme works without Git submodules or a separate plugin checkout.
+
 ## Install
 
 Run:

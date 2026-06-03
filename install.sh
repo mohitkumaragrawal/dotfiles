@@ -10,6 +10,7 @@ managed_paths=(
   ".tmux.conf"
   ".vimrc"
   ".wezterm.lua"
+  ".config/tmux"
   ".config/btop"
   ".config/ghostty"
   ".config/nvim"
