@@ -31,6 +31,7 @@ local parsers = {
 	"vimdoc",
 	"yaml",
   "rust",
+  "zig",
 }
 
 local filetypes = {
@@ -58,7 +59,8 @@ local filetypes = {
 	"vim",
 	"vimdoc",
 	"yaml",
-  "rust"
+  "rust",
+  "zig",
 }
 
 function M.setup()

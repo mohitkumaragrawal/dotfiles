@@ -6,7 +6,12 @@ local M = {
 
 function M.setup()
 	packadd({ "mini.nvim", M.name })
-	require("render-markdown").setup({})
+	require("render-markdown").setup({
+    code = {
+      disable_background = true,
+      inline = false
+    }
+  })
 end
 
 return M

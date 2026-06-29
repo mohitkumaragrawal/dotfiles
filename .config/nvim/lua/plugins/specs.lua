@@ -3,7 +3,6 @@ return {
 	{ src = "https://github.com/github/copilot.vim", name = "copilot.vim" },
 	{ src = "https://github.com/rafamadriz/friendly-snippets", name = "friendly-snippets" },
 	{ src = "https://github.com/saghen/blink.cmp", name = "blink.cmp", version = vim.version.range("1.*") },
-	{ src = "https://github.com/j-hui/fidget.nvim", name = "fidget.nvim" },
 	{ src = "https://github.com/stevearc/conform.nvim", name = "conform.nvim" },
 	{ src = "https://github.com/tpope/vim-fugitive", name = "vim-fugitive" },
 	{ src = "https://github.com/tpope/vim-rhubarb", name = "vim-rhubarb" },
@@ -32,4 +31,7 @@ return {
 	{ src = "https://github.com/tpope/vim-surround", name = "vim-surround" },
 	{ src = "https://github.com/christoomey/vim-tmux-navigator", name = "vim-tmux-navigator" },
 	{ src = "https://github.com/neogitorg/neogit", name = "neogit" },
+	{ src = "https://github.com/projekt0n/github-nvim-theme", name = "github-nvim-theme" },
+  { src = "https://github.com/esmuellert/codediff.nvim", name = "codediff" },
+  { src = "https://github.com/mofiqul/vscode.nvim", name = "vscode" },
 }

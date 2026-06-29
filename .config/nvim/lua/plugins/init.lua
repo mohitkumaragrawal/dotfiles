@@ -2,7 +2,7 @@ local specs = require("plugins.specs")
 
 local plugins = {
 	require("plugins.nvim-web-devicons"),
-	require("plugins.kanagawa"),
+	-- require("plugins.kanagawa"),
 	require("plugins.nvim-notify"),
 	require("plugins.noice"),
 	require("plugins.snacks"),
@@ -22,12 +22,14 @@ local plugins = {
 	require("plugins.nvim-lspconfig"),
 	require("plugins.nvim-treesitter"),
 	require("plugins.lazydev"),
-	require("plugins.fidget"),
 	require("plugins.trouble"),
 	require("plugins.vim-tmux-navigator"),
 	require("plugins.oil"),
 	require("plugins.markdown-preview"),
 	require("plugins.render-markdown"),
+  require("plugins.github-nvim-theme"),
+  require("plugins.codediff"),
+  require("plugins.vscode"),
 }
 
 local M = {}

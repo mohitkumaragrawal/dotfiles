@@ -25,6 +25,9 @@ local opts = {
 				},
 			},
 		},
+    progress = {
+      enabled = false,
+    }
 	},
 	presets = {
 		bottom_search = true,
