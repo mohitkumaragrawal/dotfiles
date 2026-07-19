@@ -86,13 +86,38 @@ function M.setup()
 					end,
 					cond = function()
 						local ok, noice = pcall(require, "noice")
-						return ok and noice.api.status.mode.has()
+						if not ok or not noice.api.status.mode.has() then
+							return false
+						end
+
+						local status = noice.api.status.mode.get()
+						return type(status) == "string" and status:lower():find("recording", 1, true) ~= nil
 					end,
 					color = { fg = "#ff9e64" },
 				},
 			},
 			lualine_y = {},
-			lualine_z = { { "tabs", mode = 2 } },
+			lualine_z = {
+				{
+					"tabs",
+					max_length = function()
+						return vim.o.columns - 50
+					end,
+					mode = 2,
+					show_modified_status = false,
+					fmt = function(name, tab)
+						local max_text_length = 11
+						local prefix_length = #tostring(tab.tabnr) + #(tab.modified_icon or "") + 1
+						local max_name_length = math.max(1, max_text_length - prefix_length)
+
+						if vim.fn.strchars(name) <= max_name_length then
+							return name
+						end
+
+						return vim.fn.strcharpart(name, 0, math.max(1, max_name_length))
+					end,
+				},
+			},
 		},
 		winbar = generate_winbar_config(),
 		inactive_winbar = generate_winbar_config(),
