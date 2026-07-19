@@ -7,7 +7,6 @@ local plugins = {
 	require("plugins.noice"),
 	require("plugins.snacks"),
 	require("plugins.lualine"),
-	require("plugins.indent-blankline"),
 	require("plugins.blink-cmp"),
 	require("plugins.conform"),
 	require("plugins.copilot-vim"),

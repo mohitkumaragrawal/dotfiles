@@ -7,7 +7,6 @@ return {
 	{ src = "https://github.com/tpope/vim-fugitive", name = "vim-fugitive" },
 	{ src = "https://github.com/tpope/vim-rhubarb", name = "vim-rhubarb" },
 	{ src = "https://github.com/lewis6991/gitsigns.nvim", name = "gitsigns.nvim" },
-	{ src = "https://github.com/lukas-reineke/indent-blankline.nvim", name = "indent-blankline.nvim" },
 	{ src = "https://github.com/williamboman/mason.nvim", name = "mason.nvim" },
 	{ src = "https://github.com/williamboman/mason-lspconfig.nvim", name = "mason-lspconfig.nvim" },
 	{ src = "https://github.com/neovim/nvim-lspconfig", name = "nvim-lspconfig" },

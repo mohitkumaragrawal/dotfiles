@@ -6,3 +6,11 @@ shell-integration-features = no-cursor
 
 font-family = JetBrainsMono Nerd Font
 keybind = ctrl+,=unbind
+
+gtk-single-instance = true
+quit-after-last-window-closed = false
+
+font-feature = -calt
+font-feature = -liga
+font-feature = -dlig
+

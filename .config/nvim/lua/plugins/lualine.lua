@@ -92,7 +92,7 @@ function M.setup()
 				},
 			},
 			lualine_y = {},
-			lualine_z = { { "tabs", mode = 0 } },
+			lualine_z = { { "tabs", mode = 2 } },
 		},
 		winbar = generate_winbar_config(),
 		inactive_winbar = generate_winbar_config(),

@@ -15,4 +15,4 @@ set cursorline
 syntax on
 
 nmap - <cmd>Ex<cr>
-colorscheme habamax
+colorscheme catppuccin

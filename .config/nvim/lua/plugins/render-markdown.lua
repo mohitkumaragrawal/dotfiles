@@ -10,6 +10,12 @@ function M.setup()
     code = {
       disable_background = true,
       inline = false
+    },
+    heading = {
+      backgrounds = {}
+    },
+    anti_conceal = {
+      enabled = false
     }
   })
 end
