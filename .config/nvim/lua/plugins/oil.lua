@@ -192,40 +192,38 @@ local opts = {
 		},
 		["<leader>fr"] = {
 			function()
-				local snacks = require("snacks")
 				local path = require("oil").get_current_dir(0)
 				local entry = require("oil").get_cursor_entry()
 				local cwd = path
 				if entry and entry.type == "directory" then
 					cwd = path .. entry.parsed_name
 				end
-				snacks.picker.grep({ cwd = cwd })
+				require("telescope.builtin").live_grep({ cwd = cwd })
 			end,
 			mode = "n",
 			nowait = true,
-			desc = "Snacks grep",
+			desc = "Grep directory",
 		},
 		["gd"] = {
 			function()
-				require("snacks").picker.pick({
-					finder = "proc",
-					cmd = "fd",
-					args = { "--type", "d", "--hidden", "--follow", "--exclude", ".git" },
-					transform = function(item)
-						item.file = item.text
-						item.dir = true
+				local actions = require("telescope.actions")
+				local action_state = require("telescope.actions.state")
+				require("telescope.builtin").find_files({
+					find_command = { "fd", "--type", "d", "--hidden", "--follow", "--exclude", ".git" },
+					prompt_title = "Oil Change Dir",
+					attach_mappings = function(prompt_bufnr)
+						actions.select_default:replace(function()
+							local selection = action_state.get_selected_entry()
+							actions.close(prompt_bufnr)
+							if selection then
+								require("oil").open(selection.path or selection.value)
+							end
+						end)
+						return true
 					end,
-					confirm = function(picker, item)
-						picker:close()
-						if item then
-							require("oil").open(item.text)
-						end
-					end,
-					title = "Oil Change Dir",
-					layout = "vscode",
 				})
 			end,
-			desc = "Snacks switch directory",
+			desc = "Switch directory",
 			mode = "n",
 		},
 	},

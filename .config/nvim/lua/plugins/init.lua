@@ -5,7 +5,6 @@ local plugins = {
 	-- require("plugins.kanagawa"),
 	require("plugins.nvim-notify"),
 	require("plugins.noice"),
-	require("plugins.snacks"),
 	require("plugins.lualine"),
 	require("plugins.blink-cmp"),
 	require("plugins.conform"),
@@ -29,6 +28,9 @@ local plugins = {
   require("plugins.github-nvim-theme"),
   require("plugins.codediff"),
   require("plugins.vscode"),
+  require("plugins.mini"),
+  require("plugins.telescope"),
+  require("plugins.telescope-fzf-native"),
 }
 
 local M = {}

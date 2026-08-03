@@ -9,8 +9,7 @@ set shiftwidth=2
 set expandtab
 set noswapfile
 set scrolloff=4
-set background=dark
-set cursorline
+set bg=dark
 
 syntax on
 

@@ -219,11 +219,58 @@ end
 
 local function open_profile_picker(root, profile, picker_kind)
 	local opts = resolved_grep_opts(root, profile)
+	if opts.dirs then
+		opts.search_dirs = opts.dirs
+		opts.dirs = nil
+	end
+
 	if picker_kind == "files" then
-		Snacks.picker.files(opts)
+		require("telescope.builtin").find_files(opts)
 		return
 	end
-	Snacks.picker.grep(opts)
+	require("telescope.builtin").live_grep(opts)
+end
+
+local function select_profile(items, root)
+	local actions = require("telescope.actions")
+	local action_state = require("telescope.actions.state")
+	local conf = require("telescope.config").values
+	local finders = require("telescope.finders")
+	local pickers = require("telescope.pickers")
+
+	local function open_selected(prompt_bufnr, picker_kind)
+		local selection = action_state.get_selected_entry()
+		actions.close(prompt_bufnr)
+		if selection then
+			vim.schedule(function()
+				open_profile_picker(root, selection.value, picker_kind)
+			end)
+		end
+	end
+
+	pickers.new({}, {
+		prompt_title = "Search Profiles",
+		finder = finders.new_table({
+			results = items,
+			entry_maker = function(item)
+				return {
+					value = item,
+					display = ("%s  [%s]"):format(item.label, item.scope),
+					ordinal = item.label .. " " .. item.scope,
+				}
+			end,
+		}),
+		sorter = conf.generic_sorter({}),
+		attach_mappings = function(prompt_bufnr, map)
+			actions.select_default:replace(function()
+				open_selected(prompt_bufnr, "grep")
+			end)
+			map({ "i", "n" }, "<C-f>", function()
+				open_selected(prompt_bufnr, "files")
+			end)
+			return true
+		end,
+	}):find()
 end
 
 function M.bootstrap()
@@ -345,39 +392,7 @@ function M.open_picker()
 		return
 	end
 
-	Snacks.picker.select(items, {
-		prompt = "Search Profiles",
-		format_item = function(item)
-			return ("%s  [%s]"):format(item.label, item.scope)
-		end,
-		snacks = {
-			actions = {
-				open_files = function(picker, item)
-					item = item or picker:current()
-					item = item and (item.item or item)
-					if not item then
-						return
-					end
-					picker:close()
-					vim.schedule(function()
-						open_profile_picker(root, item, "files")
-					end)
-				end,
-			},
-				win = {
-					input = {
-						keys = {
-							["<c-f>"] = { "open_files", mode = { "n", "i" }, desc = "Find Files In Profile" },
-						},
-					},
-				},
-		},
-	}, function(item)
-		if not item then
-			return
-		end
-		open_profile_picker(root, item, "grep")
-	end)
+	select_profile(items, root)
 end
 
 return M

@@ -1,3 +1,4 @@
+# theme = Tomorrow
 theme = Aura
 
 cursor-style = block
@@ -13,4 +14,3 @@ quit-after-last-window-closed = false
 font-feature = -calt
 font-feature = -liga
 font-feature = -dlig
-
