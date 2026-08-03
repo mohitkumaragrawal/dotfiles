@@ -21,6 +21,7 @@ return {
 	{ src = "https://github.com/nvim-lua/plenary.nvim", name = "plenary.nvim" },
 	{ src = "https://github.com/nvim-telescope/telescope.nvim", name = "telescope.nvim" },
 	{ src = "https://github.com/nvim-telescope/telescope-fzf-native.nvim", name = "telescope-fzf-native.nvim" },
+	{ src = "https://github.com/ibhagwan/fzf-lua", name = "fzf-lua" },
 	{ src = "https://github.com/folke/noice.nvim", name = "noice.nvim" },
 	{ src = "https://github.com/rcarriga/nvim-notify", name = "nvim-notify" },
 	{ src = "https://github.com/stevearc/oil.nvim", name = "oil.nvim" },

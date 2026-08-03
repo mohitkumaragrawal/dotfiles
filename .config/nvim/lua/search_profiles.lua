@@ -218,59 +218,50 @@ local function resolved_grep_opts(root, profile)
 end
 
 local function open_profile_picker(root, profile, picker_kind)
+	local fzf = require("fzf-lua")
 	local opts = resolved_grep_opts(root, profile)
-	if opts.dirs then
-		opts.search_dirs = opts.dirs
-		opts.dirs = nil
-	end
+	opts.dirs = nil
 
 	if picker_kind == "files" then
-		require("telescope.builtin").find_files(opts)
+		fzf.files(opts)
 		return
 	end
-	require("telescope.builtin").live_grep(opts)
+	fzf.live_grep(opts)
 end
 
 local function select_profile(items, root)
-	local actions = require("telescope.actions")
-	local action_state = require("telescope.actions.state")
-	local conf = require("telescope.config").values
-	local finders = require("telescope.finders")
-	local pickers = require("telescope.pickers")
+	local fzf = require("fzf-lua")
+	local entries = {}
+	local by_display = {}
+	for _, item in ipairs(items) do
+		local display = ("%s  [%s]"):format(item.label, item.scope)
+		entries[#entries + 1] = display
+		by_display[display] = item
+	end
 
-	local function open_selected(prompt_bufnr, picker_kind)
-		local selection = action_state.get_selected_entry()
-		actions.close(prompt_bufnr)
-		if selection then
+	local function open_selected(selected, picker_kind)
+		local item = selected[1] and by_display[selected[1]]
+		if item then
 			vim.schedule(function()
-				open_profile_picker(root, selection.value, picker_kind)
+				open_profile_picker(root, item, picker_kind)
 			end)
 		end
 	end
 
-	pickers.new({}, {
-		prompt_title = "Search Profiles",
-		finder = finders.new_table({
-			results = items,
-			entry_maker = function(item)
-				return {
-					value = item,
-					display = ("%s  [%s]"):format(item.label, item.scope),
-					ordinal = item.label .. " " .. item.scope,
-				}
+	fzf.fzf_exec(entries, {
+		prompt = "Search Profiles> ",
+		fzf_opts = {
+			["--header"] = "Enter: Grep   Ctrl-F: Find Files",
+		},
+		actions = {
+			["enter"] = function(selected)
+				open_selected(selected, "grep")
 			end,
-		}),
-		sorter = conf.generic_sorter({}),
-		attach_mappings = function(prompt_bufnr, map)
-			actions.select_default:replace(function()
-				open_selected(prompt_bufnr, "grep")
-			end)
-			map({ "i", "n" }, "<C-f>", function()
-				open_selected(prompt_bufnr, "files")
-			end)
-			return true
-		end,
-	}):find()
+			["ctrl-f"] = function(selected)
+				open_selected(selected, "files")
+			end,
+		},
+	})
 end
 
 function M.bootstrap()

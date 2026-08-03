@@ -192,13 +192,14 @@ local opts = {
 		},
 		["<leader>fr"] = {
 			function()
+				local fzf = require("fzf-lua")
 				local path = require("oil").get_current_dir(0)
 				local entry = require("oil").get_cursor_entry()
 				local cwd = path
 				if entry and entry.type == "directory" then
 					cwd = path .. entry.parsed_name
 				end
-				require("telescope.builtin").live_grep({ cwd = cwd })
+				fzf.live_grep({ cwd = cwd })
 			end,
 			mode = "n",
 			nowait = true,
@@ -206,21 +207,22 @@ local opts = {
 		},
 		["gd"] = {
 			function()
-				local actions = require("telescope.actions")
-				local action_state = require("telescope.actions.state")
-				require("telescope.builtin").find_files({
-					find_command = { "fd", "--type", "d", "--hidden", "--follow", "--exclude", ".git" },
-					prompt_title = "Oil Change Dir",
-					attach_mappings = function(prompt_bufnr)
-						actions.select_default:replace(function()
-							local selection = action_state.get_selected_entry()
-							actions.close(prompt_bufnr)
-							if selection then
-								require("oil").open(selection.path or selection.value)
+				local fzf = require("fzf-lua")
+				local oil = require("oil")
+				local cwd = oil.get_current_dir(0)
+				fzf.files({
+					cwd = cwd,
+					cmd = "fd --type d --hidden --follow --exclude .git",
+					file_icons = false,
+					git_icons = false,
+					prompt = "Oil Change Dir> ",
+					actions = {
+						["enter"] = function(selected)
+							if selected[1] then
+								oil.open(vim.fs.normalize(cwd .. selected[1]))
 							end
-						end)
-						return true
-					end,
+						end,
+					},
 				})
 			end,
 			desc = "Switch directory",

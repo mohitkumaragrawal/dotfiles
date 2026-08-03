@@ -31,6 +31,7 @@ local plugins = {
   require("plugins.mini"),
   require("plugins.telescope"),
   require("plugins.telescope-fzf-native"),
+  require("plugins.fzf-lua"),
 }
 
 local M = {}
