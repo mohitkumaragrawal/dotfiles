@@ -7,12 +7,14 @@ local M = {
 function M.setup()
 	packadd({ M.name })
 	require("mini.pick").setup()
+  require("mini.move").setup()
+  require("mini.files").setup()
+  require("mini.jump").setup()
 
-	local clue = require("mini.clue")
+  local clue = require("mini.clue")
 	clue.setup({
 		triggers = {
-			{ mode = "n", keys = "<leader>" },
-			{ mode = "x", keys = "<leader>" },
+			{ mode = { "n", "x" }, keys = "<leader>" },
 			{ mode = "n", keys = "<C-Space>" },
 			{ mode = "i", keys = "<C-x>" },
 		},
@@ -23,6 +25,9 @@ function M.setup()
 			clue.gen_clues.windows(),
 			clue.gen_clues.z(),
 		},
+    window = {
+      delay = 0
+    }
 	})
 end
 

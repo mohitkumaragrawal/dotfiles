@@ -1,4 +1,7 @@
-local M = vim.keymap.set
+local M = function(mode, lhs, rhs, opts)
+	opts = vim.tbl_extend("force", { noremap = true, silent = true }, opts or {})
+	vim.keymap.set(mode, lhs, rhs, opts)
+end
 
 local function clamp(value, min_value, max_value)
 	return math.max(min_value, math.min(value, max_value))
@@ -170,6 +173,15 @@ M("n", "]t", ":tabnext<CR>", { desc = "Next tab" })
 M("t", "<C-Space>", "<C-\\><C-n>", { desc = "Escape terminal mode" })
 
 -- keymaps for creating terminals similar to tmux splits, using Ctrl-b as prefix
-M("n", "<C-Space>|", "<cmd>vsplit | terminal<cr>i", { desc = "Vertical terminal" })
-M("n", "<C-Space>-", "<cmd>split | terminal<cr>i", { desc = "Horizontal terminal" })
 M("n", "<C-Space>t", "<cmd>terminal<cr>i", { desc = "Open terminal" })
+
+-- file explorer
+M("n", "<leader>e", function()
+	local bufname = vim.api.nvim_buf_get_name(0)
+	if bufname ~= "" then
+		MiniFiles.open(vim.fn.fnamemodify(bufname, ":h"))
+	else
+		MiniFiles.open()
+	end
+end, { desc = "Open file explorer" })
+
