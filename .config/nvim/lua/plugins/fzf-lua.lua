@@ -12,6 +12,7 @@ function M.setup()
 	packadd(M.name)
 	local fzf = require("fzf-lua")
 	fzf.setup({
+		fzf_colors = true,
 		winopts = {
 			backdrop = 100,
 		},

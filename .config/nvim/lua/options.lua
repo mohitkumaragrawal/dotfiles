@@ -25,7 +25,7 @@ vim.o.winborder = "single"
 
 vim.o.secure = true
 vim.o.exrc = true
-vim.o.conceallevel = 3
+vim.o.conceallevel = 0
 vim.o.foldmethod = "syntax"
 vim.opt.diffopt:append("vertical")
 
